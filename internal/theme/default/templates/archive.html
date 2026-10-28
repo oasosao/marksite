@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>归档 - {{.Site.Name}}</title>
+  {{if .Site.Favicon}}<link rel="icon" href="/assets/{{.Site.Favicon}}">{{end}}
+  <link rel="stylesheet" href="/static/style.css">
+  {{.Site.CustomHead}}
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">{{if .Site.Logo}}<img src="/assets/{{.Site.Logo}}" alt="logo">{{end}}<span>{{.Site.Name}}</span></a>
+  <nav>
+    <a href="/">首页</a>
+    {{range .Site.NavMenu}}<a href="{{.URL}}">{{.Label}}</a>{{end}}
+    <a href="/archive.html">归档</a>
+    {{if .Site.RSSURL}}<a href="{{.Site.RSSURL}}">RSS</a>{{end}}
+  </nav>
+</header>
+<main class="container">
+  <h1 class="page-title">归档</h1>
+  {{range .Years}}
+  <section class="archive-year">
+    <h2>{{.Year}}</h2>
+    <ul>
+      {{range .Posts}}<li><time>{{.PublishDate}}</time> <a href="{{.URL}}">{{.Title}}</a></li>{{end}}
+    </ul>
+  </section>
+  {{end}}
+</main>
+{{if or .Site.Copyright .Site.CustomFooter}}
+<footer class="site-footer">
+  <p>{{.Site.Copyright}}</p>
+  {{.Site.CustomFooter}}
+</footer>
+{{end}}
+</body>
+</html>

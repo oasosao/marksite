@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{if .Heading}}{{.Heading}} - {{end}}{{.Site.Name}}</title>
+  <meta name="description" content="{{.Site.Desc}}">
+  {{if .Site.Favicon}}<link rel="icon" href="/assets/{{.Site.Favicon}}">{{end}}
+  <link rel="stylesheet" href="/static/style.css">
+  {{.Site.CustomHead}}
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">{{if .Site.Logo}}<img src="/assets/{{.Site.Logo}}" alt="logo">{{end}}<span>{{.Site.Name}}</span></a>
+  <nav>
+    <a href="/">首页</a>
+    {{range .Site.NavMenu}}<a href="{{.URL}}">{{.Label}}</a>{{end}}
+    <a href="/archive.html">归档</a>
+    {{if .Site.RSSURL}}<a href="{{.Site.RSSURL}}">RSS</a>{{end}}
+  </nav>
+</header>
+<main class="container">
+  <h1 class="page-title">{{if .Heading}}{{.Heading}}{{else}}分类文章{{end}}</h1>
+
+  {{if .Groups}}
+  {{range .Groups}}
+  <section class="category-section">
+    <h2 class="sub-title">
+      {{.DirName}}
+      <a class="section-more" href="{{.URL}}">查看更多 →</a>
+    </h2>
+    <div class="post-list">
+      {{range .Posts}}
+      <article class="post-card">
+        {{if .Cover}}<a class="post-cover" href="{{.URL}}"><img src="{{.Cover}}" alt="{{.Title}}" loading="lazy"></a>{{end}}
+        <div class="post-body">
+          <h3><a href="{{.URL}}">{{.Title}}</a></h3>
+          <div class="meta"><time>{{.PublishDate}}</time></div>
+          {{if .Summary}}<p>{{.Summary}}</p>{{end}}
+        </div>
+      </article>
+      {{end}}
+    </div>
+  </section>
+  {{end}}
+  {{else if .Posts}}
+  <div class="post-list">
+    {{range .Posts}}
+    <article class="post-card">
+      {{if .Cover}}<a class="post-cover" href="{{.URL}}"><img src="{{.Cover}}" alt="{{.Title}}" loading="lazy"></a>{{end}}
+      <div class="post-body">
+        <h2><a href="{{.URL}}">{{.Title}}</a></h2>
+        <div class="meta"><time>{{.PublishDate}}</time></div>
+        {{if .Summary}}<p>{{.Summary}}</p>{{end}}
+      </div>
+    </article>
+    {{end}}
+  </div>
+  {{else}}
+  <p class="empty">该分类暂无文章</p>
+  {{end}}
+</main>
+{{if or .Site.Copyright .Site.CustomFooter}}
+<footer class="site-footer">
+  <p>{{.Site.Copyright}}</p>
+  {{.Site.CustomFooter}}
+</footer>
+{{end}}
+</body>
+</html>

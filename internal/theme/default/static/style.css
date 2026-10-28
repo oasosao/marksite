@@ -1,0 +1,85 @@
+:root {
+  --primary: #2563eb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #ffffff;
+  --soft: #f5f7fb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--soft);
+  font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 880px; margin: 0 auto; padding: 24px 20px;
+}
+.site-header .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; color: var(--text); }
+.site-header .brand img { height: 28px; }
+.site-header nav a { margin-left: 18px; color: var(--muted); font-size: 14px; }
+.container { max-width: 880px; margin: 0 auto; padding: 0 20px 60px; }
+.page-title { font-size: 24px; margin: 10px 0 24px; }
+.post-list { display: grid; gap: 16px; }
+.post-card, .archive-year {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 22px 24px;
+}
+/* 文章卡片：左侧封面 + 右侧正文 */
+.post-card { display: flex; gap: 20px; align-items: flex-start; }
+.post-card .post-cover {
+  flex-shrink: 0; width: 160px; height: 110px; border-radius: 8px; overflow: hidden;
+  background: var(--soft); display: block;
+}
+.post-card .post-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post-card .post-body { flex: 1; min-width: 0; }
+.post-card h2 { margin: 0 0 8px; font-size: 20px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+.tag { display: inline-block; background: #eff6ff; color: var(--primary); border-radius: 4px; padding: 0 8px; font-size: 12px; }
+.tags { margin: 10px 0 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.article { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 28px 30px; margin-top: 10px; }
+.article h1 { margin-top: 0; }
+.content { margin-top: 18px; }
+.content img { max-width: 100%; }
+.content pre { background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow: auto; }
+.content code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; }
+.content pre code { background: transparent; padding: 0; }
+.content blockquote { margin: 0; padding: 8px 16px; border-left: 4px solid var(--primary); color: var(--muted); background: var(--soft); }
+.content table { width: 100%; border-collapse: collapse; }
+.content th, .content td { border: 1px solid var(--border); padding: 8px 10px; }
+.pagination { margin-top: 28px; display: flex; gap: 16px; align-items: center; color: var(--muted); font-size: 14px; }
+.archive-year { margin-bottom: 16px; }
+.archive-year ul { list-style: none; padding: 0; margin: 0; }
+.archive-year li { padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.archive-year li:last-child { border-bottom: 0; }
+.archive-year time { color: var(--muted); font-size: 13px; margin-right: 12px; }
+.site-footer { max-width: 880px; margin: 0 auto; padding: 20px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); }
+.empty { color: var(--muted); }
+
+/* 一级目录聚合页 — 按子分类分组 */
+.category-section { margin-bottom: 32px; }
+.category-section:last-child { margin-bottom: 0; }
+.category-section .sub-title {
+  font-size: 18px; margin: 0 0 14px;
+  border-left: 4px solid var(--primary); padding-left: 10px;
+  display: flex; align-items: center; gap: 12px;
+}
+.category-section .sub-title a.section-more {
+  font-size: 13px; font-weight: normal; color: var(--muted);
+  margin-left: auto;
+}
+.category-section .sub-title a.section-more:hover { color: var(--primary); }
+.category-section .post-card h3 { margin: 0 0 6px; font-size: 16px; }
+.category-section .post-card { padding: 14px 18px; }
+.category-section .post-list { grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) {
+  .category-section .post-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .site-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .post-card, .article { padding: 18px; }
+}

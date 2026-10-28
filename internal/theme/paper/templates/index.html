@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{if .Site.Name}}{{.Site.Name}}{{end}}</title>
+  <meta name="description" content="{{.Site.Desc}}">
+  {{if .Site.Favicon}}<link rel="icon" href="/assets/{{.Site.Favicon}}">{{end}}
+  <link rel="stylesheet" href="/static/style.css">
+  {{.Site.CustomHead}}
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">{{if .Site.Logo}}<img src="/assets/{{.Site.Logo}}" alt="logo">{{end}}<span>{{.Site.Name}}</span></a>
+  <nav>
+    <a href="/">首页</a>
+    {{range .Site.NavMenu}}
+      <a href="{{.URL}}">{{.Label}}</a>
+    {{end}}
+    <a href="/archive.html">归档</a>
+    {{if .Site.RSSURL}}<a href="{{.Site.RSSURL}}">RSS</a>{{end}}
+  </nav>
+</header>
+<main class="container">
+  <h1 class="page-title">最新文章</h1>
+  {{if .Posts}}
+  <div class="post-list">
+    {{range .Posts}}
+    <article class="post-card">
+      {{if .Cover}}<a class="post-cover" href="{{.URL}}"><img src="{{.Cover}}" alt="{{.Title}}" loading="lazy"></a>{{end}}
+      <div class="post-body">
+        <h2><a href="{{.URL}}">{{.Title}}</a></h2>
+        <div class="meta"><time>{{.PublishDate}}</time></div>
+        {{if .Summary}}<p>{{.Summary}}</p>{{end}}
+      </div>
+    </article>
+    {{end}}
+  </div>
+  {{else}}
+  <p class="empty">暂无文章</p>
+  {{end}}
+  {{if gt .Pagination.TotalPages 1}}
+  <nav class="pagination">
+    {{if .Pagination.PrevURL}}<a href="{{.Pagination.PrevURL}}">上一页</a>{{end}}
+    <span>第 {{.Pagination.Page}} / {{.Pagination.TotalPages}} 页</span>
+    {{if .Pagination.NextURL}}<a href="{{.Pagination.NextURL}}">下一页</a>{{end}}
+  </nav>
+  {{end}}
+</main>
+{{if or .Site.Copyright .Site.CustomFooter}}
+<footer class="site-footer">
+  <p>{{.Site.Copyright}}</p>
+  {{.Site.CustomFooter}}
+</footer>
+{{end}}
+</body>
+</html>

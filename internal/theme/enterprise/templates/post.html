@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Post.Title}} - {{.Site.Name}}</title>
+  <meta name="description" content="{{.Post.Summary}}">
+  {{if .Site.Favicon}}<link rel="icon" href="/assets/{{.Site.Favicon}}">{{end}}
+  <link rel="stylesheet" href="/static/style.css">
+  {{.Site.CustomHead}}
+</head>
+<body>
+<header class="site-header" id="siteHeader">
+  <div class="container nav-wrap">
+    <a class="brand" href="/">
+      {{if .Site.Logo}}<img src="/assets/{{.Site.Logo}}" alt="{{.Site.Name}}">{{else}}<span class="brand-text">{{.Site.Name}}</span>{{end}}
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav">
+      <a href="/">首页</a>
+      {{range .Site.NavMenu}}<a href="{{.URL}}">{{.Label}}</a>{{end}}
+      <a href="/archive.html">新闻动态</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container article-wrap">
+  <nav class="breadcrumb">
+    <a href="/">首页</a> / <a href="/archive.html">新闻动态</a> / <span>{{.Post.Title}}</span>
+  </nav>
+  <article class="article">
+    <header class="article-header">
+      <h1>{{.Post.Title}}</h1>
+      <div class="article-meta">
+        <time>{{.Post.PublishDate}}</time>
+        {{if .Post.Tags}}
+        <span class="article-tags">
+          {{range .Post.Tags}}<a class="tag" href="/tags/{{.Slug}}.html">{{.Name}}</a>{{end}}
+        </span>
+        {{end}}
+      </div>
+    </header>
+    {{if .Post.Cover}}
+    <div class="article-cover"><img src="{{.Post.Cover}}" alt="{{.Post.Title}}"></div>
+    {{end}}
+    <div class="article-content">{{.Post.ContentHTML}}</div>
+    {{if .Post.Gallery}}
+    <section class="article-gallery">
+      <h2 class="gallery-title">图集</h2>
+      <div class="gallery-grid">
+        {{range .Post.Gallery}}
+        <a class="gallery-item" href="{{.}}" data-src="{{.}}"><img src="{{.}}" alt="" loading="lazy"></a>
+        {{end}}
+      </div>
+    </section>
+    {{end}}
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h3>{{.Site.Name}}</h3>
+      <p class="footer-desc">{{.Site.Desc}}</p>
+    </div>
+    <div class="footer-col">
+      <h4>快速导航</h4>
+      <ul class="footer-links">
+        <li><a href="/">首页</a></li>
+        {{range .Site.NavMenu}}<li><a href="{{.URL}}">{{.Label}}</a></li>{{end}}
+        <li><a href="/archive.html">新闻动态</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>联系我们</h4>
+      <div class="footer-contact">{{.Site.CustomFooter}}</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container"><p>{{.Site.Copyright}}</p></div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src="" alt=""></div>
+<script src="/static/script.js"></script>
+</body>
+</html>

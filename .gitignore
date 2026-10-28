@@ -1,0 +1,37 @@
+# 运行时数据（站点目录内的源数据与生成结果）
+data/
+uploads/
+logs/
+*.db
+*.db-wal
+*.db-shm
+
+# 依赖
+node_modules/
+
+# 前端构建产物（由 npm run build 生成后嵌入 Go 二进制）
+internal/webui/dist/
+web/public/vditor/
+
+# 编译与打包产物
+/marksite
+/desktop/marksite
+/desktop/bin/
+/desktop/build/bin/
+*.exe
+*.syso
+*.test
+*.out
+
+# 日志与临时文件
+*.log
+tmp/
+tmp_*
+
+# 开发环境默认工作目录
+/.dev/
+
+# IDE / 系统
+.idea/
+.vscode
+.DS_Store

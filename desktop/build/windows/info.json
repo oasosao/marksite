@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "1.0.0"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "1.0.0",
+			"CompanyName": "MarkSite",
+			"FileDescription": "单二进制、离线可用的静态站点管理工具",
+			"LegalCopyright": "(c) 2026, MarkSite",
+			"ProductName": "MarkSite",
+			"Comments": "MarkSite 静态站点管理工具"
+		}
+	}
+}

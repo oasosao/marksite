@@ -1,0 +1,48 @@
+# Wails v3 开发模式配置：wails3 task dev 读取本文件
+# 说明：仓库根目录是 Go module，桌面端源码在 desktop/，前端在 web/，
+# 因此 root_path 指向上一级并忽略前端与构建产物，只监听 Go 源文件。
+
+version: '3'
+
+info:
+  companyName: "MarkSite"
+  productName: "MarkSite"
+  productIdentifier: "com.marksite.desktop"
+  description: "单二进制、离线可用的静态站点管理工具"
+  copyright: "(c) 2026, MarkSite"
+  comments: "MarkSite 桌面端"
+  version: "1.0.0"
+
+dev_mode:
+  root_path: ..
+  log_level: info
+  debounce: 800
+  ignore:
+    dir:
+      - .git
+      - web
+      - desktop/bin
+      - internal/webui/dist
+    file:
+      - .DS_Store
+      - .gitignore
+      - "*_test.go"
+    watched_extension:
+      - "*.go"
+    git_ignore: true
+  executes:
+    # 首次启动准备嵌入资源与 TypeScript 绑定（dev 构建仍需要 dist 才能编译）
+    - cmd: wails3 task build:frontend
+      dir: desktop
+      type: once
+    # Vite 开发服务器：页面与前端热更新由它提供
+    - cmd: wails3 task dev:frontend
+      dir: desktop
+      type: background
+    - cmd: wails3 task dev:build
+      dir: desktop
+      type: blocking
+    - cmd: wails3 task dev:run
+      dir: desktop
+      type: primary
+      exit_policy: shutdown

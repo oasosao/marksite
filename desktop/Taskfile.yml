@@ -1,0 +1,108 @@
+version: '3'
+
+# Wails v3 构建入口：wails3 build / wails3 task package 均读取本文件。
+# 前端源码位于 ../web，构建产物由 Go 通过 go:embed 内嵌到 internal/webui。
+
+vars:
+  APP_NAME: MarkSite
+  BIN_DIR: bin
+  MACOS_MIN: "12.0"
+  VERSION: "1.0.0"
+
+tasks:
+  generate:bindings:
+    summary: 生成前端 TypeScript 绑定（输出到 web/src/bindings）
+    cmds:
+      - wails3 generate bindings -ts -i -clean -d ../web/src/bindings
+
+  build:frontend:
+    summary: 构建 Web 前端
+    dir: ../web
+    deps:
+      - task: generate:bindings
+    cmds:
+      - npm run build
+
+  build:
+    summary: 编译桌面端二进制
+    deps:
+      - task: build:frontend
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+      - go build -tags production -trimpath -buildvcs=false -ldflags="-w -s" -o {{.BIN_DIR}}/{{.APP_NAME}}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '{{.MACOS_MIN}}'
+      CGO_CFLAGS: '-mmacosx-version-min={{.MACOS_MIN}}'
+      CGO_LDFLAGS: '-mmacosx-version-min={{.MACOS_MIN}}'
+
+  package:
+    summary: 打包为 macOS .app
+    deps:
+      - task: build
+    cmds:
+      - rm -rf '{{.BIN_DIR}}/{{.APP_NAME}}.app'
+      - mkdir -p '{{.BIN_DIR}}/{{.APP_NAME}}.app/Contents/MacOS'
+      - mkdir -p '{{.BIN_DIR}}/{{.APP_NAME}}.app/Contents/Resources'
+      - cp build/darwin/icons.icns '{{.BIN_DIR}}/{{.APP_NAME}}.app/Contents/Resources/'
+      - cp '{{.BIN_DIR}}/{{.APP_NAME}}' '{{.BIN_DIR}}/{{.APP_NAME}}.app/Contents/MacOS/'
+      - cp build/darwin/Info.plist '{{.BIN_DIR}}/{{.APP_NAME}}.app/Contents/'
+      - xattr -cr '{{.BIN_DIR}}/{{.APP_NAME}}.app'
+      - codesign --force --deep --sign - '{{.BIN_DIR}}/{{.APP_NAME}}.app'
+      - codesign --verify --deep --strict '{{.BIN_DIR}}/{{.APP_NAME}}.app'
+
+  package:mac:
+    summary: 打包 macOS 发布包（zip）
+    deps:
+      - task: package
+    cmds:
+      - rm -f '{{.BIN_DIR}}/{{.APP_NAME}}-{{.VERSION}}-macos.zip'
+      - ditto -c -k --sequesterRsrc --keepParent '{{.BIN_DIR}}/{{.APP_NAME}}.app' '{{.BIN_DIR}}/{{.APP_NAME}}-{{.VERSION}}-macos.zip'
+
+  build:windows:
+    summary: 交叉编译 Windows 可执行文件（无需 mingw，WebView2 后端为纯 Go）
+    deps:
+      - task: build:frontend
+    cmds:
+      # 生成 exe 的图标与清单资源；.syso 只在 Windows 目标构建时参与编译
+      - wails3 generate syso -arch amd64 -icon build/windows/icon.ico -manifest build/windows/wails.exe.manifest -info build/windows/info.json -out windows_amd64.syso
+      - mkdir -p '{{.BIN_DIR}}/windows'
+      - go build -tags production -trimpath -buildvcs=false -ldflags="-w -s -H windowsgui" -o '{{.BIN_DIR}}/windows/{{.APP_NAME}}.exe'
+      - rm -f windows_amd64.syso
+    env:
+      GOOS: windows
+      GOARCH: amd64
+      CGO_ENABLED: "0"
+
+  package:windows:
+    summary: 打包 Windows 发布包（zip）
+    deps:
+      - task: build:windows
+    cmds:
+      - rm -f '{{.BIN_DIR}}/{{.APP_NAME}}-{{.VERSION}}-windows-amd64.zip'
+      - cd '{{.BIN_DIR}}/windows' && zip -q -r '../{{.APP_NAME}}-{{.VERSION}}-windows-amd64.zip' .
+
+  dev:frontend:
+    summary: 启动 Vite 开发服务器（供 Wails 热重载使用）
+    dir: ../web
+    cmds:
+      - npm run dev -- --port "${WAILS_VITE_PORT:-9245}" --strictPort
+
+  dev:build:
+    summary: 编译开发版桌面端（页面由 Vite 提供）
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+      - go build -tags dev -trimpath -buildvcs=false -o {{.BIN_DIR}}/{{.APP_NAME}}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '{{.MACOS_MIN}}'
+      CGO_CFLAGS: '-mmacosx-version-min={{.MACOS_MIN}}'
+      CGO_LDFLAGS: '-mmacosx-version-min={{.MACOS_MIN}}'
+
+  dev:run:
+    summary: 运行开发版桌面端（内部接口固定 8080，配合 Vite 代理）
+    cmds:
+      - ./{{.BIN_DIR}}/{{.APP_NAME}} -workdir "${MARKSITE_WORKDIR:-../.dev/site}"
+
+  dev:
+    summary: 桌面端热重载（Go 改动自动重建重开窗口，前端由 Vite 热更新）
+    cmds:
+      - wails3 dev -config ./build/config.yml -port "${WAILS_VITE_PORT:-9245}"
