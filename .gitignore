@@ -35,3 +35,4 @@ tmp_*
 .idea/
 .vscode
 .DS_Store
+workspace
