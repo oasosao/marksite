@@ -11,7 +11,7 @@ info:
   description: "单二进制、离线可用的静态站点管理工具"
   copyright: "(c) 2026, MarkSite"
   comments: "MarkSite 桌面端"
-  version: "1.0.0"
+  version: "0.0.1"
 
 dev_mode:
   root_path: ..

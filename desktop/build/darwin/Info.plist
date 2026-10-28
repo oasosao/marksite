@@ -10,11 +10,11 @@
         <key>CFBundleIdentifier</key>
         <string>com.marksite.desktop</string>
         <key>CFBundleVersion</key>
-        <string>1.0.0</string>
+        <string>0.0.1</string>
         <key>CFBundleGetInfoString</key>
         <string>单二进制、离线可用的静态站点管理工具</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.0.0</string>
+        <string>0.0.1</string>
         <key>CFBundleIconFile</key>
         <string>icons</string>
         <key>LSMinimumSystemVersion</key>

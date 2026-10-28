@@ -7,7 +7,7 @@ vars:
   APP_NAME: MarkSite
   BIN_DIR: bin
   MACOS_MIN: "12.0"
-  VERSION: "1.0.0"
+  VERSION: "0.0.1"
 
 tasks:
   generate:bindings:
